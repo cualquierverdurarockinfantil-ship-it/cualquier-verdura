@@ -44,23 +44,23 @@ export default function RingingPhone() {
           )}
         </motion.button>
 
-        <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
-          <video
-            ref={videoRef}
-            src={PHONE_VIDEO}
-            autoPlay
-            loop
-            muted
-            playsInline
-            tabIndex={-1}
-            className="absolute inset-0 w-full h-full focus:outline-none"
-            style={{
-              objectFit: "contain",
-              filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
-              outline: "none",
-            }}
-          />
-        </div>
+        <video
+          ref={videoRef}
+          src={PHONE_VIDEO}
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+          disableRemotePlayback
+          className="block w-full h-auto"
+          style={{
+            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
+            outline: "none",
+            border: "none",
+            background: "transparent",
+          }}
+        />
       </motion.div>
     </section>
   );

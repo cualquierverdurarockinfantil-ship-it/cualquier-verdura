@@ -99,4 +99,11 @@
   body {
     @apply bg-background text-foreground font-body;
   }
+  video {
+    outline: none !important;
+  }
+  video:focus,
+  video:focus-visible {
+    outline: none !important;
+  }
 }
