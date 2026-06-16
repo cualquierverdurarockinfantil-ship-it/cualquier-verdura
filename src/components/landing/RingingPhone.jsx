@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
 
@@ -20,32 +20,37 @@ const videoStyle = {
 export default function RingingPhone() {
   const videoRef = useRef(null);
   const audioRef = useRef(null);
+  const audioEnabledRef = useRef(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
 
-  // Mantiene el audio sincronizado con el loop del video.
-  useEffect(() => {
+  // Loop manual: en vez de usar el atributo `loop` nativo (que en Chrome dispara
+  // un "seeked" interno con un glitch visual de un frame en el borde del video),
+  // reiniciamos manualmente al terminar. Esto es indistinguible para el ojo pero
+  // evita el parpadeo del navegador.
+  const restartCycle = useCallback(() => {
     const video = videoRef.current;
     const audio = audioRef.current;
-    if (!video || !audio) return;
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    }
+    if (audio && audioEnabledRef.current) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+  }, []);
 
-    const restartAudio = () => {
-      if (audioEnabled) {
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
-      }
-    };
-
-    video.addEventListener("play", restartAudio);
-    video.addEventListener("seeked", restartAudio);
-    return () => {
-      video.removeEventListener("play", restartAudio);
-      video.removeEventListener("seeked", restartAudio);
-    };
-  }, [audioEnabled]);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.addEventListener("ended", restartCycle);
+    return () => video.removeEventListener("ended", restartCycle);
+  }, [restartCycle]);
 
   const toggleAudio = () => {
     setAudioEnabled((prev) => {
       const next = !prev;
+      audioEnabledRef.current = next;
       const audio = audioRef.current;
       const video = videoRef.current;
       if (audio) {
@@ -73,7 +78,6 @@ export default function RingingPhone() {
           ref={videoRef}
           src={PHONE_VIDEO}
           autoPlay
-          loop
           muted
           playsInline
           disablePictureInPicture
@@ -82,7 +86,12 @@ export default function RingingPhone() {
         />
 
         {/* Audio independiente del teléfono sonando, sincronizado con el video */}
-        <audio ref={audioRef} src={RING_AUDIO} loop preload="auto" />
+        <audio
+          ref={audioRef}
+          src={RING_AUDIO}
+          preload="auto"
+          style={{ display: "none" }}
+        />
 
         {/* Audio toggle */}
         <motion.button
