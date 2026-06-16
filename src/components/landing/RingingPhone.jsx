@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
 
-const PHONE_VIDEO = "/assets/video.mp4";
+const PHONE_VIDEO = "/assets/video-silent.mp4";
+const RING_AUDIO = "/assets/audio-only.m4a";
 
 const videoStyle = {
   display: "block",
@@ -18,13 +19,42 @@ const videoStyle = {
 
 export default function RingingPhone() {
   const videoRef = useRef(null);
+  const audioRef = useRef(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
+
+  // Mantiene el audio sincronizado con el loop del video.
+  useEffect(() => {
+    const video = videoRef.current;
+    const audio = audioRef.current;
+    if (!video || !audio) return;
+
+    const restartAudio = () => {
+      if (audioEnabled) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+    };
+
+    video.addEventListener("play", restartAudio);
+    video.addEventListener("seeked", restartAudio);
+    return () => {
+      video.removeEventListener("play", restartAudio);
+      video.removeEventListener("seeked", restartAudio);
+    };
+  }, [audioEnabled]);
 
   const toggleAudio = () => {
     setAudioEnabled((prev) => {
       const next = !prev;
-      if (videoRef.current) {
-        videoRef.current.muted = !next;
+      const audio = audioRef.current;
+      const video = videoRef.current;
+      if (audio) {
+        if (next) {
+          audio.currentTime = video ? video.currentTime : 0;
+          audio.play().catch(() => {});
+        } else {
+          audio.pause();
+        }
       }
       return next;
     });
@@ -50,6 +80,9 @@ export default function RingingPhone() {
           disableRemotePlayback
           style={videoStyle}
         />
+
+        {/* Audio independiente del teléfono sonando, sincronizado con el video */}
+        <audio ref={audioRef} src={RING_AUDIO} loop preload="auto" />
 
         {/* Audio toggle */}
         <motion.button
