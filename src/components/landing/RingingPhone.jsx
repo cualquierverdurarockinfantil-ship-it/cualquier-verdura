@@ -4,6 +4,19 @@ import { Volume2, VolumeX } from "lucide-react";
 
 const PHONE_VIDEO = "/assets/video.mp4";
 
+const videoStyle = {
+  display: "block",
+  width: "100%",
+  height: "auto",
+  border: "0px none transparent",
+  outline: "0px none transparent",
+  boxShadow: "none",
+  background: "transparent",
+  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
+  WebkitTapHighlightColor: "transparent",
+  borderRadius: 0,
+};
+
 export default function RingingPhone() {
   const videoRef = useRef(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
@@ -36,13 +49,7 @@ export default function RingingPhone() {
           playsInline
           disablePictureInPicture
           disableRemotePlayback
-          className="block w-full h-auto"
-          style={{
-            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
-            outline: "none",
-            border: "none",
-            background: "transparent",
-          }}
+          style={videoStyle}
         />
 
         {/* Audio toggle */}
