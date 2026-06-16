@@ -99,11 +99,20 @@
   body {
     @apply bg-background text-foreground font-body;
   }
-  video {
-    outline: none !important;
-  }
-  video:focus,
-  video:focus-visible {
-    outline: none !important;
-  }
+}
+
+/* El teléfono debe flotar sobre el fondo, sin marco ni outline de ningún tipo */
+video {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  -webkit-tap-highlight-color: transparent;
+}
+video:focus,
+video:focus-visible,
+video:active {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
 }
