@@ -44,11 +44,7 @@ export default function RingingPhone() {
           )}
         </motion.button>
 
-        {/* Contenedor recortado: oculta las franjas negras del video original */}
-        <div
-          className="relative w-full overflow-hidden rounded-2xl"
-          style={{ aspectRatio: "1 / 1" }}
-        >
+        <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
           <video
             ref={videoRef}
             src={PHONE_VIDEO}
@@ -57,10 +53,9 @@ export default function RingingPhone() {
             muted
             playsInline
             tabIndex={-1}
-            className="absolute left-1/2 top-1/2 w-full h-full focus:outline-none"
+            className="absolute inset-0 w-full h-full focus:outline-none"
             style={{
-              objectFit: "cover",
-              transform: "translate(-50%, -50%) scale(1.6)",
+              objectFit: "contain",
               filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))",
               outline: "none",
             }}
