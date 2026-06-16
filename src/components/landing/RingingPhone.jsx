@@ -27,23 +27,6 @@ export default function RingingPhone() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-[min(340px,78vw)] md:w-[min(440px,55vw)] lg:w-[min(560px,42vw)]"
       >
-        {/* Audio toggle */}
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.4 }}
-          onClick={toggleAudio}
-          className="absolute top-0 right-0 z-30 w-8 h-8 flex items-center justify-center rounded-full bg-white/60 hover:bg-white/90 transition-colors shadow-sm"
-          style={{ transform: "translate(30%, -30%)" }}
-          title={audioEnabled ? "Silenciar" : "Activar sonido"}
-        >
-          {audioEnabled ? (
-            <Volume2 className="w-4 h-4 text-foreground/50" />
-          ) : (
-            <VolumeX className="w-4 h-4 text-foreground/40" />
-          )}
-        </motion.button>
-
         <video
           ref={videoRef}
           src={PHONE_VIDEO}
@@ -61,6 +44,22 @@ export default function RingingPhone() {
             background: "transparent",
           }}
         />
+
+        {/* Audio toggle */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.4 }}
+          onClick={toggleAudio}
+          className="absolute top-2 right-2 z-30 w-8 h-8 flex items-center justify-center rounded-full bg-white/60 hover:bg-white/90 transition-colors shadow-sm"
+          title={audioEnabled ? "Silenciar" : "Activar sonido"}
+        >
+          {audioEnabled ? (
+            <Volume2 className="w-4 h-4 text-foreground/50" />
+          ) : (
+            <VolumeX className="w-4 h-4 text-foreground/40" />
+          )}
+        </motion.button>
       </motion.div>
     </section>
   );
