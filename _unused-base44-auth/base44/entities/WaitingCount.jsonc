@@ -1,0 +1,14 @@
+{
+  "name": "WaitingCount",
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "number",
+      "default": 387,
+      "description": "Number of people waiting for the message"
+    }
+  },
+  "required": [
+    "count"
+  ]
+}
