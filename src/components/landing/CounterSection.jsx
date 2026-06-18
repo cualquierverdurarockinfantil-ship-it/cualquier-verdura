@@ -1,32 +1,5 @@
-import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useWaitingCount } from "@/hooks/useWaitingCounter";
-
-function AnimatedNumber({ value }) {
-  const [display, setDisplay] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  useEffect(() => {
-    if (!isInView) return;
-    const duration = 1500;
-    const startTime = performance.now();
-    const animate = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 4);
-      setDisplay(Math.floor(value * eased));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-  }, [isInView, value]);
-
-  return (
-    <span ref={ref} className="tabular-nums">
-      {display.toLocaleString("es-AR")}
-    </span>
-  );
-}
 
 export default function CounterSection() {
   const { data: currentCount } = useWaitingCount();
@@ -46,13 +19,13 @@ export default function CounterSection() {
           Personas esperando el mensaje
         </p>
         <p
-          className="font-mono leading-none font-bold"
+          className="font-mono leading-none font-bold tabular-nums"
           style={{
             fontSize: "clamp(4.5rem, 18vw, 11rem)",
             color: "#93C121",
           }}
         >
-          <AnimatedNumber value={currentCount ?? 0} />
+          {(currentCount ?? 0).toLocaleString("es-AR")}
         </p>
       </motion.div>
     </section>
